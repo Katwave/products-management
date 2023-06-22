@@ -110,6 +110,3 @@ function console_log($output, $hasScriptTags = true) {
     echo $code;
 }
 ?>
-
-<?= console_log(getProductsInCategory('Kids')) ?>
-<?= console_log(doesProductExistInCategory('Kids', 'Toy car')) ?>
