@@ -34,9 +34,13 @@
     
     class Product {
         public string $name;
+        public string $img;
+        public string $price;
         
-        public function __construct(string $name) {
+        public function __construct(string $name, string $img, string $price) {
             $this->name = $name;
+            $this->img = $img;
+            $this->price = $price;
         }
     }
     
@@ -51,9 +55,11 @@
     }
     
     $data = [
-        new Category('Mens', [new Product('Blue Shirt'), new Product('Red T-Shirt')]),
-        new Category('Ladies', [new Product('Red Shirt'), new Product('Pink T-Shirt')]),
-        new Category('Kids', [new Product('Sneakers'), new Product('Toy car')]),
+        new Category('Mens', [new Product('Red Hoodie', './img/men-red-shirt.jpg', '559.00'), new Product('Red T-Shirt', './img/men-red-tshirt.jpg', '199.00')]),
+        new Category('Ladies', [new Product('Green Shirt', './img/women-green-shirt.jpg', '129.00')]),
+        new Category('Kids', [new Product('Sneakers', './img/kids-shoes-2.jpg', '677.00'),
+         new Product('Toy car', './img/kids-toy-car.jpg', '399.00')
+        ]),
     ];
     
     /**
@@ -97,10 +103,29 @@
         return false;
     }
 
+    // Data to send over AJAX requests
+    if (isset($_POST['function_name'])) {
+        $functionName = $_POST['function_name'];
+      
+        if ($functionName === 'getProductsInCategory') {
+          $category = isset($_POST['category']) ? $_POST['category'] : ''; // Get the category parameter
+          
+          $result = getProductsInCategory($category);
+          echo json_encode($result);
+        }
+        else if($functionName === 'doesProductExistInCategory') {
+            $category = isset($_POST['category']) ? $_POST['category'] : ''; // Get the category parameter
+            $product = isset($_POST['product']) ? $_POST['product'] : ''; // Get the product parameter
+            
+            $result = doesProductExistInCategory($category, $product);
+            echo json_encode($result);
+        }
+      }
+
 ?>
 
-<!-- Console logging (To see objects/arrays in browser) -->
 <?php
+// Console logging (To see objects/arrays in browser)
 function console_log($output, $hasScriptTags = true) {
     $code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
 ');';
